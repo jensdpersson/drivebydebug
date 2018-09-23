@@ -1,0 +1,1 @@
+java -cp target -agentlib:jdwp=transport=dt_socket,address=localhost:9009,server=y,suspend=y org.drivebydebug.debugtarget.DebugTargetDaemon

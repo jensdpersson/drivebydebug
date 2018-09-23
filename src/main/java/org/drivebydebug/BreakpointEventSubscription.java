@@ -1,0 +1,85 @@
+package org.drivebydebug;
+
+import com.sun.jdi.request.EventRequestManager;
+import com.sun.jdi.VirtualMachine;
+import com.sun.jdi.ReferenceType;
+import com.sun.jdi.StackFrame;
+import com.sun.jdi.ThreadReference;
+import com.sun.jdi.request.BreakpointRequest;
+import com.sun.jdi.request.EventRequest;
+import com.sun.jdi.AbsentInformationException;
+import com.sun.jdi.IncompatibleThreadStateException;
+import com.sun.jdi.Location;
+import com.sun.jdi.event.Event;
+import com.sun.jdi.event.BreakpointEvent;
+
+
+import java.util.List;
+
+public class BreakpointEventSubscription implements EventSubscription {
+
+    private String file;
+    private int line;
+    private String className;
+    private EvaluatorSet evaluators = new EvaluatorSet();
+    private Logger logger;
+
+    public BreakpointEventSubscription(String file, int line){
+        this.file = file;
+        this.line = line;
+        this.className = fileToClassName(file);
+    }
+
+    public void setLogger(Logger logger){
+        this.logger = logger;
+    }
+
+    private String fileToClassName(String file){
+        return file; //for now
+    }
+
+    public void prop(String key, String value){
+        evaluators.prop(key, value);
+    }
+
+    public EventRequest activate(VirtualMachine vm){
+        EventRequestManager erm = vm.eventRequestManager();
+        List<ReferenceType> classes = vm.classesByName(className);
+        if(classes.size() != 1){
+            throw new IllegalArgumentException("Expected exactly one loaded version of " 
+            + file);
+        }
+       
+        Location loc = null;
+
+        try {
+            ReferenceType c = classes.get(0);
+            List<Location> locations = c.locationsOfLine(line);
+            if(locations.size() < 1){
+                throw new IllegalArgumentException("No executable location for " + className);
+            }
+            loc = locations.get(0);
+        } catch(AbsentInformationException abex){
+            throw new IllegalArgumentException(abex);
+        }
+
+        BreakpointRequest request = erm.createBreakpointRequest(loc);
+        return request;
+    }
+
+    public void onEvent(Event event){
+        BreakpointEvent e = (BreakpointEvent) event;
+        ThreadReference t = e.thread();        
+        try {
+            StackFrame f = t.frame(0);
+            for(Evaluator evaluator : evaluators){
+                Evaluation evaluation = evaluator.eval(f);
+                logger.onEvaluation(evaluation);
+            }
+        } catch(IncompatibleThreadStateException ix){
+            logger.onError(ix);
+        }
+    }
+
+
+}
