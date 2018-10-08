@@ -64,8 +64,11 @@ public class EventSubscriber implements Configurable {
                 }
 
                 for(EventSubscription subscription : cfg.subscriptions()){
+                    System.out.println("Activating " + subscription);
+                    subscription.setLogger(logger);
                     EventRequest request = subscription.activate(vm);                    
                     request.putProperty(EventSubscription.PROPERTY_KEY, subscription);
+                    request.setEnabled(true);
                 }
 
                 EventQueue eventQueue = vm.eventQueue();

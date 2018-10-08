@@ -6,12 +6,14 @@ import com.sun.jdi.ReferenceType;
 import com.sun.jdi.StackFrame;
 import com.sun.jdi.ThreadReference;
 import com.sun.jdi.request.BreakpointRequest;
+import com.sun.jdi.request.ClassPrepareRequest;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.IncompatibleThreadStateException;
 import com.sun.jdi.Location;
 import com.sun.jdi.event.Event;
 import com.sun.jdi.event.BreakpointEvent;
+import com.sun.jdi.event.ClassPrepareEvent;
 
 
 import java.util.List;
@@ -45,29 +47,42 @@ public class BreakpointEventSubscription implements EventSubscription {
     public EventRequest activate(VirtualMachine vm){
         EventRequestManager erm = vm.eventRequestManager();
         List<ReferenceType> classes = vm.classesByName(className);
-        if(classes.size() != 1){
-            throw new IllegalArgumentException("Expected exactly one loaded version of " 
-            + file);
+        if(classes.size() < 1){
+            ClassPrepareRequest req = erm.createClassPrepareRequest();
+            req.addClassFilter(className);
+            return req;
         }
        
-        Location loc = null;
+        ReferenceType c = classes.get(0);
+        return createBreakpoint(erm, c);           
+    }
 
+    private BreakpointRequest createBreakpoint(EventRequestManager erm, ReferenceType c){
         try {
-            ReferenceType c = classes.get(0);
             List<Location> locations = c.locationsOfLine(line);
             if(locations.size() < 1){
-                throw new IllegalArgumentException("No executable location for " + className);
+                throw new IllegalArgumentException("No executable location for " 
+                    + className + ":" + line );
             }
-            loc = locations.get(0);
+            Location loc = locations.get(0);
+            BreakpointRequest request = erm.createBreakpointRequest(loc);
+            return request;
         } catch(AbsentInformationException abex){
             throw new IllegalArgumentException(abex);
         }
-
-        BreakpointRequest request = erm.createBreakpointRequest(loc);
-        return request;
     }
 
     public void onEvent(Event event){
+        if(event instanceof ClassPrepareEvent){
+            System.out.println("ClassPrepareEvent");
+            ClassPrepareEvent cpe = (ClassPrepareEvent) event;
+            BreakpointRequest request = 
+                createBreakpoint(event.virtualMachine().eventRequestManager(), cpe.referenceType());
+                request.putProperty(EventSubscription.PROPERTY_KEY, this);
+                request.setEnabled(true);
+            return;
+        }
+
         BreakpointEvent e = (BreakpointEvent) event;
         ThreadReference t = e.thread();        
         try {

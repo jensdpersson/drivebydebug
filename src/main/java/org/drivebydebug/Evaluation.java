@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sun.jdi.Value;
+import com.sun.jdi.LongValue;
+import com.sun.jdi.ObjectReference;
+import com.sun.jdi.Type;
+import com.sun.jdi.ClassType;
+import com.sun.jdi.LongType;
 
 public class Evaluation {
 
     private String expression;
-    private List<Value> values = new ArrayList<Value>();
+    private List<String> values = new ArrayList<String>();
 
     public Evaluation(String expression){
         this.expression = expression;
@@ -20,15 +25,18 @@ public class Evaluation {
 
     public String getValueAString(){
         if(values.size() > 0){
-            return String.valueOf(values.get(values.size()-1));
+            return values.get(values.size()-1);
         }
         return null;
     }
 
-    public void addResult(Value value){
-        values.add(value);
+   
+
+    public void addResult(String result){
+        values.add(result);
     }
 
     public void setFailure(Throwable up){}
+
 
 }

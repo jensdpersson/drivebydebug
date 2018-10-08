@@ -3,7 +3,7 @@ package org.drivebydebug;
 import com.sun.jdi.event.Event;
 import com.sun.jdi.event.EventSet;
 import com.sun.jdi.event.EventQueue;
-import com.sun.jdi.event.BreakpointEvent;
+import com.sun.jdi.request.EventRequest;
 import java.util.concurrent.Callable;
 
 public class EventPump {
@@ -39,14 +39,21 @@ public class EventPump {
                             }
                         }
                         EventSet eventSet = eventQueue.remove(10000);
+                        if(eventSet == null){
+                            continue;
+                        }
                         for(Event event : eventSet){
-                            EventSubscription subscription = (EventSubscription) 
-                                    event.request().getProperty(EventSubscription.PROPERTY_KEY);
-                            if(subscription != null){
-                                subscription.onEvent(event);
+                            System.out.println("Got event " + event);
+                            EventRequest request = event.request();
+                            if(request != null){
+                                EventSubscription subscription = (EventSubscription) 
+                                        event.request().getProperty(EventSubscription.PROPERTY_KEY);
+                                if(subscription != null){
+                                    subscription.onEvent(event);
+                                }
                             }
                         }
-                       
+                        eventSet.virtualMachine().resume();
                     } catch(Exception ex){
                         System.out.println("EventPump got exception");
                         ex.printStackTrace();

@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>Drive-By Debug</title>
+        <style>
+            .section {
+                font-family: Arial;
+                margin-bottom: 20px;
+            }
+            .title {
+                margin-bottom: 10px;
+                font-weight: bold;
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="section">
+            <div class="title">Introduction</div>
+            <div class="bread">
+                Drive-By Debug is a command line tool that attaches to a jvm
+                like a normal debugger, but when pausing on breakpoints, 
+                rather than making the user click around
+                a graphical debugger gui, it will evaluate a set of expressions
+                from a dynamically reloaded configuration file and then
+                immediately resume the jvm, logging collected results.
+            </div>            
+        </div>
+        <div class="section">
+            <div class="title">Use Cases</div>
+            <div class="bread">
+                <ul>
+                    <li>
+                Some applications behave differently when timing changes because the debugger
+                has paused on break points. Just collecting values and then resuming minimizes
+                these effects.
+                </li>
+                <li>
+                    Sometimes it is convenient to check the same set of values at the same point in the
+                    code for different invocations. Logging the values separately avoids the tedium
+                    of manually tabulating results. 
+                </li>
+                <li>
+                    Sometimes it is not practical or possible to connect a graphical debugger to 
+                    a remote machine where a jvm is running. A command line utility installable
+                    on the remote host can be more convenient.
+                </li> 
+                <li>
+                    If a behaviour that needs to be investigated by debugging occurs on a 
+                    production server then connecting a graphical debugger and pausing it may
+                     not be possible.
+                    Collecting values using Drive-By Debug just may be. 
+                </li>
+                </ul>
+            </div>            
+        </div>
+    </body>
+</html>
