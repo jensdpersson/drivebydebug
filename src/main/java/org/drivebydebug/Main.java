@@ -16,7 +16,7 @@ public class Main {
         }
 
         try {
-            new Configurator(new EventSubscriber(new StdoutLogger())).watch(file);
+            new Configurator(new EventPump(new StdoutLogger())).watch(file);
         } catch(Exception ex){
             die(ex);
         }

@@ -14,9 +14,10 @@ public class DebugTargetDaemon {
                 System.out.println("Running...");
                 longVariable = new Long(51);
                 System.out.println("Ran...");
+                System.exit(0);
             }
         };
-        timer.schedule(task, 10, 10);
+        timer.schedule(task, 1000);
     }
 
 

@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.HashMap;
-import java.util.ArrayList;
 
 public class Configurator {
 
@@ -27,8 +25,7 @@ public class Configurator {
                 try {
                     if(Configurator.this.lastModified < file.lastModified()){
                         System.out.println("Configuration changed, reloading");
-                        Configuration Configs = parse(file);
-                        configurable.configure(Configs);
+                        parse(file);                        
                         Configurator.this.lastModified = file.lastModified();
                     }
                 } catch (Exception ex){
@@ -43,7 +40,7 @@ public class Configurator {
         timer.cancel();
     }
 
-    public Configuration parse(File file) throws Exception {
+    public void parse(File file) throws Exception {
         FileReader fred = new FileReader(file);
         BufferedReader bread = new BufferedReader(fred);
         String line = null;
@@ -74,7 +71,7 @@ public class Configurator {
                 current.prop(line.substring(0, colonIndex), line.substring(colonIndex+1));
             }
         }
-        return config;
+        configurable.configure(config);
     }
 
 } 
