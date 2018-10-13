@@ -129,7 +129,6 @@ public class Tests {
         Assert.assertEquals("", logger.listComplaints());
     }
 
-
     class TestLogger implements Logger {
 
         Properties facit = new Properties();
@@ -145,7 +144,8 @@ public class Tests {
         }
 
         @Override
-        public void onEvaluation(Evaluation evaluation) {
+        public void onBreakpoint(List<Evaluation> evaluations) {
+            for(Evaluation evaluation : evaluations){
             String expr = evaluation.getExpression();
             System.out.println("Removing expression ["+expr+"] " + "from " + facit);
             String expected = (String) facit.remove(expr);
@@ -158,19 +158,21 @@ public class Tests {
                 errors.add(new Exception("Expression [" 
                     + expr + "] was supposed to evaluate to [" + expected + "], not [" +actual+ "]"));
             }
-        }
-
-        public String listComplaints(){
+            }
             for(String leftOver : facit.stringPropertyNames()){
                 errors.add(new Exception("No evaluation of expression [" + leftOver + "]"));
             }
+        }
+
+        public String listComplaints(){
+            
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
-            pw.print("[");
+           
             for(Throwable error : errors){
                 error.printStackTrace(pw);
             }
-            pw.print("]");
+            
             pw.flush();
             return sw.toString();
         }

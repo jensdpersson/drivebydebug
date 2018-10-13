@@ -15,7 +15,7 @@ import com.sun.jdi.event.Event;
 import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.ClassPrepareEvent;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class BreakpointEventSubscription implements EventSubscription {
@@ -87,10 +87,11 @@ public class BreakpointEventSubscription implements EventSubscription {
         ThreadReference t = e.thread();        
         try {
             StackFrame f = t.frame(0);
+            List<Evaluation> evaluations = new ArrayList<>();
             for(Evaluator evaluator : evaluators){
-                Evaluation evaluation = evaluator.eval(f);
-                logger.onEvaluation(evaluation);
+                evaluations.add(evaluator.eval(f));
             }
+            logger.onBreakpoint(evaluations);
         } catch(IncompatibleThreadStateException ix){
             logger.onError(ix);
         }
