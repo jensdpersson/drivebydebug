@@ -12,7 +12,7 @@ public class DebugTargetDaemon {
                 System.out.println("About to run...");
                 Long longVariable = new Long(23);
                 System.out.println("Running...");
-                longVariable = new Long(51);
+                String stringVariable = "apa";
                 System.out.println("Ran...");
                 System.exit(0);
             }
