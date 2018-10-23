@@ -110,13 +110,12 @@ public class Tests {
             subscriber.on(new ClassFilteringEventListener(
                 VMDisconnectEvent.class, 
                 new EventListener(){
-                    public boolean onEvent(Event event){
+                    public void onEvent(Event event){
                         System.out.println("Got VMDisconnect");
                         vmDisconnected[0] = true;
                         synchronized(lock){
                             lock.notify();
-                        }
-                        return false;
+                        }                        
                     }
                 })
             );         

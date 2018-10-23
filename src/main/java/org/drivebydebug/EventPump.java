@@ -38,12 +38,6 @@ public class EventPump implements Configurable {
   
     public EventPump(Logger logger){
         this.logger = logger;
-        this.eventHandlers.add(
-            new ClassFilteringEventListener(
-                VMStartEvent.class,
-                new ResumingEventListener()
-            )
-        );
         this.eventHandlers.add(new SubscriptionNotifyingEventListener());
     }
   
@@ -79,18 +73,13 @@ public class EventPump implements Configurable {
                         if(eventSet == null){
                             continue;
                         }
-                        boolean resume = false;
                         for(Event event : eventSet){
                             System.out.println("Got event " + event);
                             for(EventListener handler : eventHandlers){
-                                if(handler.onEvent(event)){
-                                    resume = true;
-                                }
+                                handler.onEvent(event);
                             }
                         }
-                        //if(resume){
-                            eventSet.virtualMachine().resume();
-                        //}
+                        eventSet.virtualMachine().resume();
                     } catch(Exception ex){
                         System.out.println("EventPump got exception");
                         ex.printStackTrace();

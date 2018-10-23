@@ -72,7 +72,7 @@ public class BreakpointEventSubscription implements EventSubscription {
         }
     }
 
-    public boolean onEvent(Event event){
+    public void onEvent(Event event){
         if(event instanceof ClassPrepareEvent){
             System.out.println("ClassPrepareEvent");
             ClassPrepareEvent cpe = (ClassPrepareEvent) event;
@@ -80,7 +80,7 @@ public class BreakpointEventSubscription implements EventSubscription {
                 createBreakpoint(event.virtualMachine().eventRequestManager(), cpe.referenceType());
                 request.putProperty(EventSubscription.PROPERTY_KEY, this);
                 request.setEnabled(true);
-            return false;
+            return;
         }
 
         BreakpointEvent e = (BreakpointEvent) event;
@@ -95,8 +95,6 @@ public class BreakpointEventSubscription implements EventSubscription {
         } catch(IncompatibleThreadStateException ix){
             logger.onError(ix);
         }
-
-        return true;
     }
 
 

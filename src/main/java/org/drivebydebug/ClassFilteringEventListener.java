@@ -13,11 +13,10 @@ public class ClassFilteringEventListener implements EventListener {
     }
 
     @Override
-    public boolean onEvent(Event event){
+    public void onEvent(Event event){
         if(clas.isInstance(event)){
-            return next.onEvent(event);
+            next.onEvent(event);
         }
-        return false;
     }
 
 }

@@ -4,6 +4,6 @@ import com.sun.jdi.event.Event;
 
 public interface EventListener {
 
-    public boolean onEvent(Event event);
+    public void onEvent(Event event);
 
 }
