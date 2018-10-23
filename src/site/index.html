@@ -10,23 +10,29 @@
                 margin-bottom: 10px;
                 font-weight: bold;
                 text-decoration: underline;
+                text-align: center;
             }
         </style>
     </head>
     <body>
+        <div>
+            <a href="#what">What is it</a>
+            <a href="#when">When to use it</a>
+            <a href="#how">How to use it</a>
+        </div>
         <div class="section">
-            <div class="title">Introduction</div>
+            <div class="title"><a name="what">What is it?</a></div>
             <div class="bread">
                 Drive-By Debug is a command line tool that attaches to a jvm
-                like a normal debugger, but when pausing on breakpoints, 
-                rather than making the user click around
-                a graphical debugger gui, it will evaluate a set of expressions
-                from a dynamically reloaded configuration file and then
-                immediately resume the jvm, logging collected results.
+                like a normal debugger, and pauses on breakpoints like a normal debugger.
+                With a normal debugger a user would then click around
+                a graphical gui to find the variable values of interest. With Drive-by Debug,
+                the variables are configured in advance so when the jvm pauses the relevant values
+                are immediately recorded and then the jvm is resumed as fast as possible.
             </div>            
         </div>
         <div class="section">
-            <div class="title">Use Cases</div>
+            <div class="title"><a name="when">So when is this convenient?</a></div>
             <div class="bread">
                 <ul>
                     <li>
@@ -48,10 +54,41 @@
                     If a behaviour that needs to be investigated by debugging occurs on a 
                     production server then connecting a graphical debugger and pausing it may
                      not be possible.
-                    Collecting values using Drive-By Debug just may be. 
+                    Collecting values on the fly with minimal pauses just may be. 
                 </li>
                 </ul>
             </div>            
         </div>
+        <div class="section">
+            <div class="title"><a name="how">So how does one use this?</a></div>
+            <div class="bread">
+                <div>
+                    It needs to be <a href="#install">downloaded</a>; then you need to write 
+                     a small <a href="#configuration_format">configuration file</a>. 
+                     (perhaps starting from <a href="#example_config">an example</a>).
+                      
+                    The configuration essentially just needs to specify <a href="#connector_config">where to attach</a>, <a href="#break">where in the code to break</a>
+                    and <a href="#eval">what variables to record there</a> and finally 
+                    <a href="#loggers"> how to log it</a>. 
+                    
+                    The target application, i.e. the application that you want to debug, needs to be started
+                    with <a href="#attaching">standard debug parameters</a>.
+
+                    When the target is <a href="#target_is_listening">up and listening</a> you can 
+                        <a href="#running">run the debugger to attach</a>.
+                </div>
+            </div>
+        </div>
+        <div class="section">
+                <div class="title"><a name="install">Download and install</a></div>
+                <div class="bread">
+                    <div>
+                        Development is hosted on <a href="https://github.com/jensdpersson/drivebydebug"> github</a>.
+                        You can clone the repository and build it yourself or download the latest release.
+                        The resulting executable jar file is self-contained and can be placed just anywhere
+                        you like.
+                    </div>
+                </div>
+            </div>
     </body>
 </html>
