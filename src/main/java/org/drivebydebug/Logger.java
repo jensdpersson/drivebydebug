@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface Logger {
 
-    public void onBreakpoint(List<Evaluation> evaluations);
+    public void onBreakpoint(Break breakpoint);
 
     public void onError(Throwable ball);
 }

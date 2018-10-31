@@ -87,11 +87,12 @@ public class BreakpointEventSubscription implements EventSubscription {
         ThreadReference t = e.thread();        
         try {
             StackFrame f = t.frame(0);
-            List<Evaluation> evaluations = new ArrayList<>();
+            Location loc = e.location();
+            Break b = new Break(loc);
             for(Evaluator evaluator : evaluators){
-                evaluations.add(evaluator.eval(f));
+                b.add(evaluator.eval(f));
             }
-            logger.onBreakpoint(evaluations);
+            logger.onBreakpoint(b);
         } catch(IncompatibleThreadStateException ix){
             logger.onError(ix);
         }

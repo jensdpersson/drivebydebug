@@ -143,8 +143,8 @@ public class Tests {
         }
 
         @Override
-        public void onBreakpoint(List<Evaluation> evaluations) {
-            for(Evaluation evaluation : evaluations){
+        public void onBreakpoint(Break bp) {
+            for(Evaluation evaluation : bp.evaluations()){
             String expr = evaluation.getExpression();
             System.out.println("Removing expression ["+expr+"] " + "from " + facit);
             String expected = (String) facit.remove(expr);
