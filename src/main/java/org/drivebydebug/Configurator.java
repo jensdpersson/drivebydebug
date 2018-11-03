@@ -3,9 +3,6 @@ package org.drivebydebug;
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import java.util.Map;
-import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 

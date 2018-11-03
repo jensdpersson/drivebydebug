@@ -2,7 +2,6 @@ package org.drivebydebug;
 
 import com.sun.jdi.event.Event;
 import com.sun.jdi.event.EventSet;
-import com.sun.jdi.event.VMStartEvent;
 import com.sun.jdi.event.EventQueue;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.Bootstrap;
@@ -10,19 +9,12 @@ import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.VirtualMachineManager;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
-import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.connect.AttachingConnector;
-import com.sun.jdi.ReferenceType;
-import com.sun.jdi.Location;
-import com.sun.jdi.request.BreakpointRequest;
 
-
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Iterator;
 import java.util.concurrent.Callable;
 
 public class EventPump implements Configurable {

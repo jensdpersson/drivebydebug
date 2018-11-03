@@ -3,7 +3,6 @@ package org.drivebydebug;
 import java.util.Collections;
 import java.util.List;
 
-import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Field;
 import com.sun.jdi.LocalVariable;
 import com.sun.jdi.Method;
@@ -35,12 +34,12 @@ public class Evaluator {
                 String result = ((StringReference)string).value();
                 evaluation.addResult(result);
             }
-            for(Sub sub : this.subs){
-                Type type = value.type();
-                if(type instanceof ReferenceType){
-
-                }
-            }
+            //for(Sub sub : this.subs){
+            //    Type type = value.type();
+            //    if(type instanceof ReferenceType){
+            //
+            //    }
+            //}
         } catch (Exception abex){
             evaluation.setFailure(abex);
         }

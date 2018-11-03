@@ -3,13 +3,6 @@ package org.drivebydebug;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.jdi.Value;
-import com.sun.jdi.LongValue;
-import com.sun.jdi.ObjectReference;
-import com.sun.jdi.Type;
-import com.sun.jdi.ClassType;
-import com.sun.jdi.LongType;
-
 public class Evaluation {
 
     private String expression;

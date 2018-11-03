@@ -1,7 +1,5 @@
 package org.drivebydebug;
 
-import java.util.List;
-
 public class StdoutLogger implements Logger {
 
    @Override
