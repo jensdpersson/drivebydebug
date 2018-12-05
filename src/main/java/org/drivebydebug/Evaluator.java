@@ -15,31 +15,38 @@ import com.sun.jdi.Value;
 
 public class Evaluator {
 
+    private String expr;
     private String var;
     private Sub[] subs;
     
     public Evaluation eval(StackFrame frame){
-        Evaluation evaluation = new Evaluation(var);
+        Evaluation evaluation = new Evaluation(expr);
         try {
             LocalVariable var = frame.visibleVariableByName(this.var);
             Value value = frame.getValue(var);
             if(value instanceof ObjectReference){
                 ObjectReference ref = (ObjectReference) value;
+               
+                for(Sub sub : this.subs){
+                    Value subval = sub.eval(ref, frame);
+                    if(subval instanceof ObjectReference){
+                        ref = (ObjectReference) subval;
+                    } else {
+                        throw new IllegalArgumentException("Failed evaluating ["
+                            + expr + "], [" 
+                            + subval + "] is not an object reference");
+                    }
+                }
                 List<Method> toString = ref.referenceType().methodsByName("toString", 
                                                                           "()Ljava/lang/String;");
                 Value string = ref.invokeMethod(frame.thread(), 
                                                 toString.get(0), 
                                                 Collections.emptyList(), 
-                                                0);
+                                                ObjectReference.INVOKE_SINGLE_THREADED);
                 String result = ((StringReference)string).value();
                 evaluation.addResult(result);
             }
-            //for(Sub sub : this.subs){
-            //    Type type = value.type();
-            //    if(type instanceof ReferenceType){
-            //
-            //    }
-            //}
+            
         } catch (Exception abex){
             evaluation.setFailure(abex);
         }
@@ -47,12 +54,13 @@ public class Evaluator {
     }
 
     public Evaluator(String input){
+        this.expr = input;
         String[] parts = input.split("\\.");
         this.var = parts[0];
-        this.subs = new Sub[parts.length];
+        this.subs = new Sub[parts.length-1];
         for(int i = 1; i<parts.length;i++){
             if(parts[i].endsWith("()")){
-                this.subs[i-1] = new MethodSub(parts[i]);
+                this.subs[i-1] = new MethodSub(parts[i].substring(0,parts[i].length()-2));
             } else {
                 this.subs[i-1] = new FieldSub(parts[i]);
             }
@@ -60,7 +68,7 @@ public class Evaluator {
     }
 
     private interface Sub {
-       public ObjectReference eval(ObjectReference ref);
+       public Value eval(ObjectReference ref, StackFrame frame) throws Exception;
     }
 
     private class FieldSub implements Sub {
@@ -68,10 +76,10 @@ public class Evaluator {
         public FieldSub(String name){
             this.name = name;
         }
-        public ObjectReference eval(ObjectReference ref) {
+        public Value eval(ObjectReference ref, StackFrame frame) {
+            System.out.println("eval field " + name + " in " + ref);
             Field field = ref.referenceType().fieldByName(this.name);
-            //return ref.getValue(field);
-            return null;
+            return (ObjectReference) ref.getValue(field);
         }
     }
 
@@ -80,8 +88,20 @@ public class Evaluator {
         public MethodSub(String name){
             this.name = name;
         }
-        public ObjectReference eval(ObjectReference ref) {
-            return null;
+        public Value eval(ObjectReference ref, StackFrame frame) throws Exception {
+            System.out.println("eval method " + name + " in " + ref);
+            List<Method> methods = ref.referenceType().methodsByName(this.name);
+            for(Method meth : methods){
+                if(meth.argumentTypeNames().size() == 0){
+                    return ref.invokeMethod(frame.thread(), 
+                                            meth, 
+                                            Collections.emptyList(), 
+                                            ObjectReference.INVOKE_SINGLE_THREADED);
+                }
+            }
+            throw new IllegalArgumentException("Failed evaluating ["
+                + expr + "], no zero-arg method called [" + name +
+                "] on [" + ref.referenceType() + "]");
         }
     }
 

@@ -69,6 +69,7 @@ public class Configurator {
             }
         }
         configurable.configure(config);
+        bread.close();
     }
 
 } 

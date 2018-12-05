@@ -4,10 +4,10 @@ import com.sun.jdi.event.Event;
 
 public class ClassFilteringEventListener implements EventListener {
 
-    private Class clas;
+    private Class<?> clas;
     private EventListener next;
 
-    public ClassFilteringEventListener(Class clas, EventListener next){
+    public ClassFilteringEventListener(Class<?> clas, EventListener next){
         this.clas = clas;
         this.next = next;
     }

@@ -13,12 +13,29 @@ public class DebugTargetDaemon {
                 Long longVariable = new Long(23);
                 System.out.println("Running...");
                 String stringVariable = "apa";
-                System.out.println("Ran...");
+                SomeObject objectVariable = new SomeObject();
+                System.out.println("Ran... " 
+                    + objectVariable.someField + " " 
+                    + objectVariable.someMethod());
+                    try {
+                Thread.sleep(200);
+                    } catch (InterruptedException iex){}
                 System.exit(0);
             }
         };
         timer.schedule(task, 1000);
     }
 
+    public static class SomeObject {
+        public String someField = "valueOfThatField";
+        public AnotherObject anotherField = new AnotherObject();
+        public String someMethod(){
+            return "returnValueOfThatMethod";
+        }
+    }
+
+    public static class AnotherObject {
+        private String yetAnotherField = "valueOfThatOtherField";
+    }
 
 }

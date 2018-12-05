@@ -15,19 +15,18 @@ import com.sun.jdi.event.Event;
 import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.ClassPrepareEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BreakpointEventSubscription implements EventSubscription {
 
-    private String file;
+//    private String file;
     private int line;
     private String className;
     private EvaluatorSet evaluators = new EvaluatorSet();
     private Logger logger;
 
     public BreakpointEventSubscription(String file, int line){
-        this.file = file;
+  //      this.file = file;
         this.line = line;
         this.className = fileToClassName(file);
     }
