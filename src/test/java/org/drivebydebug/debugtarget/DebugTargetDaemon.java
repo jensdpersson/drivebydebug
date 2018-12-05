@@ -14,12 +14,7 @@ public class DebugTargetDaemon {
                 System.out.println("Running...");
                 String stringVariable = "apa";
                 SomeObject objectVariable = new SomeObject();
-                System.out.println("Ran... " 
-                    + objectVariable.someField + " " 
-                    + objectVariable.someMethod());
-                    try {
-                Thread.sleep(200);
-                    } catch (InterruptedException iex){}
+                System.out.println("Ran... ");
                 System.exit(0);
             }
         };
