@@ -7,6 +7,7 @@ public class Evaluation {
 
     private String expression;
     private List<String> values = new ArrayList<String>();
+    private Throwable up;
 
     public Evaluation(String expression){
         this.expression = expression;
@@ -22,14 +23,18 @@ public class Evaluation {
         }
         return null;
     }
-
    
-
     public void addResult(String result){
         values.add(result);
     }
 
-    public void setFailure(Throwable up){}
+    public Throwable getFailure() {
+        return up;
+    }
+
+    public void setFailure(Throwable up){
+        this.up = up;
+    }
 
 
 }
